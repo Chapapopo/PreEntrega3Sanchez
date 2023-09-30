@@ -1,0 +1,20 @@
+.Fondo{
+    background-image: url(../Imagenes/light.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+.FondoOscuro{
+    background-image: url(../Imagenes/dark.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+main {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
