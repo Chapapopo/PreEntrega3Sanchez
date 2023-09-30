@@ -10,7 +10,9 @@ let modalBodyCarrito = document.getElementById("modal-bodyCarrito")
 let botonCarrito = document.getElementById("botonCarrito")
 let precioTotal = document.getElementById("precioTotal")
 
-//FUNCTIONS: 
+//Funciones 
+
+//Funcion principal
 function mostrarCatalogo(array){
     //inicio con el catalogo limpio
     containerOjotas.innerHTML = ""
@@ -18,7 +20,7 @@ function mostrarCatalogo(array){
     for(let ojota of array){
         //creo el elemento con cada uno de los objetos
         let ojotaNuevaDiv= document.createElement("div")
-        ojotaNuevaDiv.className = "col-12 col-md-6 col-lg-4 my-2"
+        ojotaNuevaDiv.className = "col-12 col-md-6 col-lg-3 my-2"
         ojotaNuevaDiv.innerHTML = `
             <div id="${ojota.id}" class="card" style="width: 18rem;">
                     <img class="card-img-top img-fluid" style="height: auto;"src="Imagenes/${ojota.Imagen}" alt="${ojota.Modelo}">
@@ -31,26 +33,26 @@ function mostrarCatalogo(array){
             </div> `
         containerOjotas.append(ojotaNuevaDiv)
         let agregarBtn = document.getElementById(`agregarBtn${ojota.id}`)
-        console.log(agregarBtn)
         agregarBtn.addEventListener("click", () => {
+            //voy a agregar al carrito
             agregarAlCarrito(ojota)
         })
     }
 }
 
+//Agrego a la compra
 function agregarAlCarrito(elemento){
-    //preguntar: existe este ojota(elemento) en el array??
+    //Preguto si la nueva ojota esta en el array
     let ojotaAgregada = productosCarrito.find((ojota) => ojota.id == elemento.id)
-    //realizado con operador ternario
     ojotaAgregada == undefined ?  
-            (//pusheo al array carrito:
+            (//pongo el elemento en el carrito:
             productosCarrito.push(elemento),
             //setStorage
-            localStorage.setItem("carrito", JSON.stringify(productosCarrito)),
-            console.log(productosCarrito)) :
+            localStorage.setItem("carrito", JSON.stringify(productosCarrito))) :
             console.log(`La ojota ${elemento.Modelo} ya existe en el carrito`)
 }
 
+//creo los el elemento en el carrito
 function cargarProductosCarrito(array){
     modalBodyCarrito.innerHTML = ""
     array.forEach(
@@ -67,8 +69,11 @@ function cargarProductosCarrito(array){
             `
         }
     )
+    //voy a calcular el total de la compra
     calcularTotal(array)    
 }
+
+//Funcion para calcular el totol
 function calcularTotal(array){    
     const totalReduce = array.reduce(
         (acumulador, ojota)=>
@@ -78,24 +83,24 @@ function calcularTotal(array){
     totalReduce > 0 ? precioTotal.innerHTML = `<strong>El total de su compra es: ${totalReduce}</strong>` : precioTotal.innerHTML = `No hay productos en el carrito`
 }
 
+//funcion para buscar una ojota en particular por modelo
 function buscarInfo(buscado,array){
     //me devuelve un array vacio si no encuentra, sino un array elementos con la coincidencias
     let coincidencias = array.filter(
         (ojota) => {
-            //includes cualquier coincidencia parcial en el string con includes
             return ojota.Modelo.toLowerCase().includes(buscado.toLowerCase())
         }
     )
-    //ternario para evaluar si coincidencias está vacio
-    //ternario, tenemos varias instrucciones encerrar entre parentesis y separar por coma ,
     coincidencias.length > 0 ? (mostrarCatalogo(coincidencias), coincidenciasDiv.innerHTML ="") : (mostrarCatalogo(array), coincidenciasDiv.innerHTML = `<h3>No hay coincidencias con su búsqueda, este es nuestro catálogo completo</h3>`) 
 }
-//EVENTOS PROYECTO:
+//EVENTO:
 buscador.addEventListener("input", () => {
     console.log(buscador.value)
     buscarInfo(buscador.value,Stock)
 })
 
+
+//Filtro por demografia
 selectOrden.addEventListener("change", () => {
     console.log(selectOrden.value)
     switch(selectOrden.value){
@@ -116,10 +121,13 @@ selectOrden.addEventListener("change", () => {
         break
     }
 })
+
+//Boton carrito
 botonCarrito.addEventListener("click", () => {
     cargarProductosCarrito(productosCarrito)
 })
 
+//Funcion de filtrado
 function FiltrarDemografia(x,Stock) {
     let arrayfiltrado = Stock.concat()
     arrayfiltrado = Stock.filter(function(Stock) {
@@ -128,5 +136,5 @@ function FiltrarDemografia(x,Stock) {
       mostrarCatalogo(arrayfiltrado)
 }
 
-//CÓDIGO
+//codigo 
 mostrarCatalogo(Stock)
